@@ -1,0 +1,308 @@
+:root {
+    /* Kolorystyka */
+    --primary: #4f46e5; /* Indigo */
+    --primary-dark: #4338ca;
+    --bg-app: #f1f5f9; /* Slate 100 */
+    --bg-sidebar: #ffffff;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    
+    /* Wymiary */
+    --sidebar-width: 400px;
+    --spacing: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden; /* App feel */
+}
+
+/* Layout Aplikacji */
+.app-container {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    height: 100vh;
+}
+
+/* --- LEWY PANEL (SIDEBAR) --- */
+.editor-sidebar {
+background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+    overflow: hidden; 
+    z-index: 10;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar-header {
+    flex-shrink: 0;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+}
+.sidebar-header h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+
+.scrollable-form {
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 20px;
+    min-height: 0; 
+    height: 100%;
+}
+
+.sidebar-footer {
+    flex-shrink: 0;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    background: #f8fafc;
+}
+
+/* Formularze */
+.editor-section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+.editor-section:last-child { border-bottom: none; }
+
+.section-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.full-width { grid-column: span 2; }
+
+.input-group label {
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    color: var(--text-muted);
+}
+input, textarea, select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+textarea { resize: vertical; min-height: 80px; }
+
+/* Dynamiczne Sekcje */
+.dynamic-item {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.remove-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: none; border: none; color: #ef4444;
+    cursor: pointer; font-size: 1.1rem;
+}
+
+/* Przyciski */
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-outline { background: white; border: 1px solid var(--border-color); color: var(--text-main); }
+.btn-secondary { background: #e2e8f0; color: var(--text-main); }
+.btn-success { background: #10b981; color: white; }
+.btn-dashed {
+    background: white; border: 1px dashed var(--border-color);
+    color: var(--primary); width: 100%; padding: 10px;
+}
+.btn-dashed:hover { background: #f1f5f9; border-color: var(--primary); }
+.small-mt { margin-top: 10px; }
+
+/* Zdjęcie upload */
+.photo-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.photo-upload-wrapper img {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+
+/* PRAWY PANEL (PODGLĄD) */
+.preview-stage {
+    background: #525659; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.preview-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: rgba(82, 86, 89, 0.9);
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+.preview-label { color: white; font-size: 0.9rem; opacity: 0.8; }
+
+.cv-paper {
+    background: white;
+    width: 210mm;
+    min-height: 297mm; /* A4 */
+    padding: 15mm;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    color: var(--text-main);
+}
+
+/* STYL CV WEWNĄTRZ PAPIERU */
+.cv-header-modern {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--primary);
+}
+.cv-header-modern h1 { font-size: 2.2rem; margin-bottom: 5px; color: #111; }
+.cv-header-modern h2 { font-size: 1.1rem; color: var(--primary); font-weight: 500; margin-bottom: 15px; }
+.cv-summary-text { font-size: 0.9rem; line-height: 1.5; color: #444; max-width: 400px; }
+
+.cv-avatar { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; margin-left: 20px; }
+.cv-contact-list {
+    text-align: right; font-size: 0.85rem; margin-top: 10px; line-height: 1.6;
+}
+.cv-contact-list div { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.cv-contact-list a { color: var(--text-main); text-decoration: none; }
+.cv-contact-list a:hover { color: var(--primary); text-decoration: underline; }
+
+.cv-body-grid {
+    display: grid;
+    grid-template-columns: 7fr 3fr; 
+    gap: 25px;
+}
+
+.cv-heading {
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.cv-section { margin-bottom: 25px; }
+.cv-section.hidden { display: none; }
+
+/* Elementy CV */
+.cv-item { margin-bottom: 15px; }
+.cv-item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.cv-item-title { font-weight: 700; font-size: 1rem; }
+.cv-item-title a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--primary); }
+.cv-item-title a:hover { color: var(--primary); border-bottom-style: solid; }
+
+.cv-item-subtitle { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+.cv-item-date { font-size: 0.8rem; color: var(--text-muted); }
+.cv-item-desc { font-size: 0.9rem; line-height: 1.5; white-space: pre-line; color: #334155; }
+
+/* Tagi i Certyfikaty */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+    background: #f1f5f9; padding: 4px 8px; border-radius: 4px;
+    font-size: 0.8rem; font-weight: 500; color: #334155;
+}
+
+.cert-link a { color: var(--primary); font-size: 0.8rem; text-decoration: none; }
+.cert-link a:hover { text-decoration: underline; }
+
+.cv-rodo { font-size: 0.65rem; color: #94a3b8; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+
+/* Loader i Responsywność */
+.loader-overlay {
+position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex; /* Domyślnie flex */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 9999; /* Musi być na wierzchu */
+    transition: opacity 0.3s;
+}
+
+/* Tego brakowało - to naprawia błąd: */
+.loader-overlay.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner { 
+    width: 40px;
+    height: 40px;
+    border: 4px solid #fff;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+    margin-bottom: 10px;
+
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* PDF Mode */
+.pdf-mode { margin: 0 !important; width: 210mm !important; height: 297mm !important; box-shadow: none !important; }
+
+@media (max-width: 1000px) {
+    .app-container { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
+    .editor-sidebar { height: auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+    .preview-stage { padding: 10px; height: auto; overflow: visible; }
+    .cv-paper { width: 100%; min-height: auto; aspect-ratio: 210/297; padding: 20px; }
+    .cv-body-grid { grid-template-columns: 1fr; }
+}

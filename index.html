@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cv Mistrz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="editor-sidebar">
+        <div class="sidebar-header">
+            <h2>🖋️ Cv - Mistrz</h2>
+            <div class="action-group">
+                <button id="btnLoadCV" class="btn btn-outline btn-sm">Wczytaj</button>
+                <input type="file" id="loadFile" accept=".json" hidden>
+            </div>
+        </div>
+
+        <div class="scrollable-form">
+            <div class="editor-section">
+                <h3 class="section-title">Dane osobowe</h3>
+                <div class="photo-upload-wrapper">
+                    <img id="photoPreview" src="https://via.placeholder.com/100?text=Foto" alt="">
+                    <div class="photo-actions">
+                        <button id="btnUploadPhoto" class="btn btn-secondary btn-sm">Wybierz zdjęcie</button>
+                        <input type="file" id="photoUpload" accept="image/*" hidden>
+                        <button id="btnRemovePhoto" class="btn btn-text btn-sm text-danger" style="display:none">Usuń</button>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="input-group full-width">
+                        <label>Imię i Nazwisko</label>
+                        <input type="text" id="fullName" placeholder="Jan Kowalski">
+                    </div>
+                    <div class="input-group full-width">
+                        <label>Stanowisko</label>
+                        <input type="text" id="jobTitle" placeholder="Frontend Developer">
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="jan@example.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="phone" placeholder="+48 000 000 000">
+                    </div>
+                    <div class="input-group full-width">
+                        <label>Adres</label>
+                        <input type="text" id="address" placeholder="Warszawa, Polska">
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Social Media & Linki</h3>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>LinkedIn (URL)</label>
+                        <input type="url" id="linkedin">
+                    </div>
+                    <div class="input-group">
+                        <label>GitHub (URL)</label>
+                        <input type="url" id="github">
+                    </div>
+                    <div class="input-group">
+                        <label>Strona WWW (URL)</label>
+                        <input type="url" id="website">
+                    </div>
+                </div>
+                <div id="websitesContainer"></div> <button id="btnAddWebsite" class="btn btn-dashed small-mt">+ Dodaj inny link</button>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Profil zawodowy</h3>
+                <textarea id="summary" rows="4" placeholder="Krótko o Twoim doświadczeniu i celach..."></textarea>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Doświadczenie</h3>
+                <div id="experienceContainer"></div>
+                <button id="btnAddExperience" class="btn btn-dashed full-width">+ Dodaj pozycję</button>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Certyfikaty</h3>
+                <div id="certificatesContainer"></div>
+                <button id="btnAddCertificate" class="btn btn-dashed full-width">+ Dodaj certyfikat</button>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Edukacja</h3>
+                <div id="educationContainer"></div>
+                <button id="btnAddEducation" class="btn btn-dashed full-width">+ Dodaj szkołę</button>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Umiejętności</h3>
+                <textarea id="skills" placeholder="React, Node.js, Photoshop (oddziel przecinkami)"></textarea>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Języki obce</h3>
+                <div id="languagesContainer"></div>
+                <button id="btnAddLanguage" class="btn btn-dashed full-width">+ Dodaj język</button>
+            </div>
+
+            <div class="editor-section">
+                <h3 class="section-title">Klauzula RODO</h3>
+                <textarea id="rodoClause" class="text-small" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button id="btnSaveCV" class="btn btn-success full-width">💾 Zapisz Projekt</button>
+        </div>
+    </aside>
+
+    <main class="preview-stage">
+        <div class="preview-toolbar">
+            <span class="preview-label">Podgląd A4</span>
+            <button id="btnDownloadPDF" class="btn btn-primary">⬇ Pobierz PDF</button>
+        </div>
+
+        <div class="cv-paper-container">
+            <div id="cvContent" class="cv-paper">
+                <header class="cv-header-modern">
+                    <div class="header-left">
+                        <h1 id="cvName">Jan Kowalski</h1>
+                        <h2 id="cvTitle">Stanowisko</h2>
+                        <p id="cvSummary" class="cv-summary-text"></p>
+                    </div>
+                    <div class="header-right">
+                        <img id="cvPhoto" class="cv-avatar hidden" src="">
+                        <div id="cvContact" class="cv-contact-list"></div>
+                    </div>
+                </header>
+
+                <div class="cv-body-grid">
+                    <div class="cv-main-col">
+                        <section id="experienceSection" class="cv-section hidden">
+                            <h3 class="cv-heading">Doświadczenie Zawodowe</h3>
+                            <div id="cvExperience"></div>
+                        </section>
+                        
+                        <section id="educationSection" class="cv-section hidden">
+                            <h3 class="cv-heading">Edukacja</h3>
+                            <div id="cvEducation"></div>
+                        </section>
+
+                        <section id="rodoSection" class="cv-rodo hidden">
+                            <p id="cvRodo"></p>
+                        </section>
+                    </div>
+
+                    <div class="cv-side-col">
+                        <section id="skillsSection" class="cv-section hidden">
+                            <h3 class="cv-heading">Umiejętności</h3>
+                            <div id="cvSkills" class="tags-cloud"></div>
+                        </section>
+
+                        <section id="languagesSection" class="cv-section hidden">
+                            <h3 class="cv-heading">Języki</h3>
+                            <div id="cvLanguages"></div>
+                        </section>
+
+                        <section id="certificatesSection" class="cv-section hidden">
+                            <h3 class="cv-heading">Certyfikaty</h3>
+                            <div id="cvCertificates"></div>
+                        </section>
+                        
+                        <section id="linksSection" class="cv-section hidden">
+                            <h3 class="cv-heading">Linki</h3>
+                            <div id="cvLinksList"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="pdf-loader" class="loader-overlay hidden">
+    <div class="spinner"></div>
+    <p>Generowanie PDF...</p>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
